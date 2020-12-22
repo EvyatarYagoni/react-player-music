@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,8 +7,6 @@ import {
   faAngleLeft,
   faPause,
 } from "@fortawesome/free-solid-svg-icons";
-
-import { playAudio } from "../util";
 
 const Player = ({
   currentSong,
@@ -21,10 +19,9 @@ const Player = ({
   setCurrentSong,
   setSongs,
 }) => {
-  //useEffect
-  useEffect(() => {
+  const activeLibraryHandler = (nextPrev) => {
     const newSongs = songs.map((song) => {
-      if (song.id === currentSong.id) {
+      if (song.id === nextPrev.id) {
         return {
           ...song,
           active: true,
@@ -37,10 +34,8 @@ const Player = ({
       }
     });
 
-    playAudio(isPlaying, audioRef);
-
     setSongs(newSongs);
-  }, [currentSong]);
+  };
   //Event Handlers
   const playSongHandler = () => {
     if (!isPlaying) {
@@ -63,21 +58,24 @@ const Player = ({
     setSongInfo({ ...songInfo, currentTime: e.target.value });
   };
 
-  const skipTrackHandler = (direction) => {
+  const skipTrackHandler = async (direction) => {
     let currentIndex = songs.findIndex((song) => {
       return song.id === currentSong.id;
     });
 
     if (direction === "skip-forward") {
-      setCurrentSong(songs[(currentIndex + 1) % songs.length]);
+      await setCurrentSong(songs[(currentIndex + 1) % songs.length]);
+      activeLibraryHandler(songs[(currentIndex + 1) % songs.length]);
     }
     if (direction === "skip-back") {
       if ((currentIndex - 1) % songs.length === -1) {
-        setCurrentSong(songs[songs.length - 1]);
+        await setCurrentSong(songs[songs.length - 1]);
       } else {
-        setCurrentSong(songs[(currentIndex - 1) % songs.length]);
+        await setCurrentSong(songs[(currentIndex - 1) % songs.length]);
+        activeLibraryHandler(songs[(currentIndex - 1) % songs.length]);
       }
     }
+    if (isPlaying) audioRef.current.play();
   };
 
   return (
@@ -92,7 +90,9 @@ const Player = ({
           type="range"
           className="time-control__range"
         />
-        <p className="time-control__time">{getTime(songInfo.duration)}</p>
+        <p className="time-control__time">
+          {songInfo.duration ? getTime(songInfo.duration) : "0:00"}
+        </p>
       </div>
 
       <div className="play-control">

@@ -50,3 +50,24 @@
   transform: translateX(0);
   opacity: 1;
 }
+
+@media screen and (max-width: 1164px) {
+  .song-description h3 {
+    font-size: 80%;
+  }
+}
+
+@media screen and (max-width: 994px) {
+  .library-song {
+    img {
+      height: 10vh;
+      width: 10vh;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .library {
+    width: 100%;
+  }
+}
