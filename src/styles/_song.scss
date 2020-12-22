@@ -1,0 +1,13 @@
+.song-conainer {
+  min-height: 60vh;
+
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  background-color: aqua;
+  &__song-name {
+    margin-bottom: 1rem;
+  }
+}

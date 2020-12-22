@@ -1,0 +1,6 @@
+{
+    // Automutic detect js file is react file
+    "files.associations": {
+        "*.js": "javascriptreact"
+    }
+}
